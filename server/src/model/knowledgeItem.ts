@@ -1,4 +1,5 @@
 import { Schema, model, Document,Types } from 'mongoose';
+import { z } from 'zod';
 
 export type knowledgeType = 'note' | 'file' | 'link';
 
@@ -15,7 +16,7 @@ export interface IKnowledgeItem extends Document {
     updatedAt: Date;
 }
 
-const knowledgeItemSchema = new Schema<IKnowledgeItem>({
+export const knowledgeItemSchema = new Schema<IKnowledgeItem>({
     userId: {type: Schema.Types.ObjectId, ref: 'User', required: true},
     type: { type: String, enum: ['note', 'file', 'link'], required: true },
     title: { type: String, required: true },

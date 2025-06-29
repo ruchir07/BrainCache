@@ -1,11 +1,11 @@
 import { Request,Response,NextFunction } from "express";
 import knowledgeItem from "../model/knowledgeItem";
 import user from "../model/user";
-import { KeyObject } from "crypto";
-
+import { generateEmbeddingText } from "../utils/embedding"; 
 export const getAllNotes = async(req: Request, res: Response) => {
     try{
-        const notes = await knowledgeItem.find();
+        const userId = (req as any).user?._id; // Assuming user ID is stored in req.user
+        const notes = await knowledgeItem.find({ user:userId });
         res.status(200).json(notes);
     }
     catch(error) {
@@ -15,7 +15,26 @@ export const getAllNotes = async(req: Request, res: Response) => {
 
 export const createNote = async(req: Request, res: Response) => {
     try{
-        const newNote = new knowledgeItem(req.body);
+        const userId = (req as any).user?._id; // Assuming user ID is stored in req.user 
+
+        const {type, title, content, tags} = req.body;
+
+        if (!type || !title) {
+            res.status(400).json({ message: "Missing required fields: type or title" });
+            return;
+        }
+
+        console.log("Embedding content:", content);
+        const vector = await generateEmbeddingText(content || '');
+
+        const newNote = new knowledgeItem({
+            userId,
+            type,
+            title,
+            content,
+            tags,
+            vector
+        });
         const savedNote = await newNote.save();
         res.status(201).json(savedNote);
     }catch(error) {
