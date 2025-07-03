@@ -1,6 +1,7 @@
 import express from 'express';
 import passport from 'passport';
 import { generateToken } from '../utils/generateToken';
+import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
@@ -23,9 +24,25 @@ router.get('/google/callback',
             sameSite: 'lax',
         });
 
-        res.redirect('http://localhost:5173/dashboard');  //This has to be changed to the frontend URL
+        res.redirect('http://localhost:5173/home');  //This has to be changed to the frontend URL
     }
 );
+
+router.get('/profile', (req, res) => {
+    if (!req.user) {
+        res.status(401).json({ message: 'Not authenticated' });
+        return
+    }
+
+  const token = jwt.sign(
+    { id: (req.user as any)._id },
+    process.env.JWT_SECRET!,
+    { expiresIn: '7d' }
+  );
+
+  res.json({ user: req.user, token });
+  return;
+});
 
 router.get('/logout',(req,res) =>{
     res.clearCookie('token');

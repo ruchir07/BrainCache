@@ -8,17 +8,19 @@ interface jwtPayload {
 
 export const protect = async (req: Request, res: Response, next: NextFunction):Promise<void> => {
 
-    const authHeader = req.headers.authorization;
-    const cookieToken = req.cookies?.token;
+    const authHeader = req.headers.authorization?.split(' ')[1];
+    const cookieToken = req.cookies.token;
 
-    let token = '';
+    // let token = '';
 
-    // Priority: Header token
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-        token = authHeader.split(' ')[1];
-    } else if (cookieToken) {
-        token = cookieToken;
-    }
+    // // Priority: Header token
+    // if (authHeader && authHeader.startsWith('Bearer ')) {
+    //     token = authHeader.split(' ')[1];
+    // } else if (cookieToken) {
+    //     token = cookieToken;
+    // }
+
+    const token = cookieToken || authHeader;
 
     if(!token){
         res.status(401).json({ message: 'Not authorized, no token' });

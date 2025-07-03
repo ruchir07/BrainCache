@@ -1,40 +1,38 @@
-import { useAuthStore } from "../store/AuthStore";
 import { useEffect } from "react";
-import { Button } from "@/components/ui/button"
+import { useAuthStore } from "../store/AuthStore";
+
 
 const Login = () => {
+  
   const { setUser, setToken } = useAuthStore();
-
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch("http://localhost:3000/api/auth/profile", {
-          credentials: "include",
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          setUser(data.user);
-          setToken(data.token); // Optional if you’re sending a token from backend
-        }
-      } catch (err) {
-        console.error("❌ Failed to fetch user:", err);
+    
+    const fetchUser = async() => {
+      const res = await fetch("http://localhost:3000/api/auth/profile", {
+        credentials: "include",
+      });
+      if(res.ok) {
+        const data = await res.json();
+        setUser(data.user);
+        setToken(data.token);
       }
     };
-
     fetchUser();
-  }, [setUser, setToken]);
+  },[]);
 
   const handleLogin = () => {
-    // Redirect to your backend's Google OAuth route
     window.location.href = "http://localhost:3000/api/auth/google";
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="h-screen w-full flex flex-col justify-center items-center bg-black text-white">
+      <h1 className="text-4xl font-bold mb-6">Welcome to BrainCache</h1>
+      <p className="text-gray-400 mb-8 text-center max-w-md">
+        Your personal second brain for organizing notes, files, and links using AI.
+      </p>
       <button
         onClick={handleLogin}
-        className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
+        className="px-6 py-3 rounded-xl bg-white text-black hover:bg-gray-200 transition font-medium"
       >
         Sign in with Google
       </button>

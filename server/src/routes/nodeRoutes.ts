@@ -6,8 +6,11 @@ import {
     createNote,
     createUser,
     updateNote,
-    deleteNote
+    deleteNote,
+    shareBrain,
+    accessBrain
 } from '../controllers/noteController';
+import { link } from 'fs';
 
 const router = express.Router();
 
@@ -23,7 +26,9 @@ router.post('/upload',protect,upload.single('file'),async(req, res):Promise<void
 
 router.get('/',protect, getAllNotes);
 
+router.post('/brain/share',protect,shareBrain);
 
+router.get('/brain/:shareLink',accessBrain);
 
 router.post('/',protect, createNote);
 router.post('/user', createUser);    

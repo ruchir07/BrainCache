@@ -1,7 +1,7 @@
 import { Schema, model, Document,Types } from 'mongoose';
 import { z } from 'zod';
 
-export type knowledgeType = 'note' | 'file' | 'link';
+export type knowledgeType = "all" | "note" | "file" | "link";
 
 export interface IKnowledgeItem extends Document {
 

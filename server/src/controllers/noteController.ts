@@ -1,11 +1,23 @@
 import { Request,Response,NextFunction } from "express";
 import knowledgeItem from "../model/knowledgeItem";
+import mongoose from "mongoose";
 import user from "../model/user";
+import link from "../model/link";
 import { generateEmbeddingText } from "../utils/embedding"; 
+import {random} from "../utils/generateLink";
+
 export const getAllNotes = async(req: Request, res: Response) => {
     try{
-        const userId = (req as any).user?._id; // Assuming user ID is stored in req.user
-        const notes = await knowledgeItem.find({ user:userId });
+        const userId = (req as any).user?._id; 
+        console.log(userId);
+
+        const notes = await knowledgeItem.find({
+            userId: new mongoose.Types.ObjectId(userId)
+        });
+
+        // const notes = await knowledgeItem.find({ user:userId });
+        console.log("Found notes",notes);
+
         res.status(200).json(notes);
     }
     catch(error) {
@@ -17,15 +29,17 @@ export const createNote = async(req: Request, res: Response) => {
     try{
         const userId = (req as any).user?._id; // Assuming user ID is stored in req.user 
 
-        const {type, title, content, tags} = req.body;
+        console.log(userId);
+        console.log("req.body:", req.body);
+        const {type, title, content, tags,fileUrl} = req.body;
 
-        if (!type || !title) {
-            res.status(400).json({ message: "Missing required fields: type or title" });
-            return;
-        }
+        // if (!type || !title) {
+        //     res.status(400).json({ message: "Missing required fields: type or title" });
+        //     return;
+        // }
 
         console.log("Embedding content:", content);
-        const vector = await generateEmbeddingText(content || '');
+        // const vector = await generateEmbeddingText(content || '');
 
         const newNote = new knowledgeItem({
             userId,
@@ -33,7 +47,7 @@ export const createNote = async(req: Request, res: Response) => {
             title,
             content,
             tags,
-            vector
+            fileUrl
         });
         const savedNote = await newNote.save();
         res.status(201).json(savedNote);
@@ -81,3 +95,76 @@ export const deleteNote = async(req: Request, res: Response):Promise<void> => {
         res.status(400).json({ error: "Delete failed" });
     }
 };
+
+export const shareBrain = async(req:Request,res:Response):Promise<void> => {
+    try{
+        const share = req.body.share;
+        if(share){
+
+            let existing = await link.findOne({userId: req.user});
+
+            if(!existing){
+                const newLink = await link.create({
+                    userId: req.user,
+                    hash: random(10),
+                });
+                existing = newLink
+            }
+
+            res.json({
+                message:"Link create",
+                shareUrl:`http://localhost:5173/shared/${existing.hash}`
+            })
+        }else{
+            const deleting = await link.deleteOne({
+                userId: req.user
+            });
+            if(deleting){
+                res.status(200).json({
+                    message: "Link Deleted Successfully"
+                });
+                return;
+            }
+        }
+    }
+    catch(error){
+        res.status(201).json("Error Creating Link:" + error);
+    }
+}
+
+export const accessBrain = async(req:Request,res:Response):Promise<void> =>{
+
+    const hash = req.params.shareLink;
+    const links = await link.findOne({
+        hash
+    });
+
+    if(!links){
+        res.status(411).json({
+            message: "Sorry incorrect input"
+        });
+        return;
+    }
+
+    //userId
+    const content = await knowledgeItem.find({
+        userId: links.userId
+    });
+
+    const per = await user.findOne({
+        _id: links.userId
+    });
+
+    if(!per){
+        res.status(411).json({
+            message:"user not found,"
+        });
+        return;
+    }
+
+    res.json({
+        username: per.email,
+        notes: content
+    })
+
+}

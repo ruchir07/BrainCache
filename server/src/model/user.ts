@@ -1,4 +1,4 @@
-import { Schema, model,Document } from 'mongoose';
+import mongoose, { Schema, model,Document, Mongoose } from 'mongoose';
 
 export interface IUser extends Document {
     googleId: string;
@@ -14,5 +14,6 @@ const userSchema = new Schema<IUser>({
     email: { type: String, required: true, unique: true },
     createdAt: { type: Date, default: Date.now }
 });
+
 
 export default model<IUser>('User', userSchema);
