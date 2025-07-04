@@ -15,6 +15,7 @@ const Login = () => {
         const data = await res.json();
         setUser(data.user);
         setToken(data.token);
+
       }
     };
     fetchUser();

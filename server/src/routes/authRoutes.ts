@@ -45,8 +45,19 @@ router.get('/profile', (req, res) => {
 });
 
 router.get('/logout',(req,res) =>{
-    res.clearCookie('token');
+    req.logout((err) => {
+    if (err) {
+      return res.status(500).json({ message: "Logout failed", error: err });
+    }
+
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+    });
+
     res.status(200).json({ message: 'Logged out successfully' });
+  });
 });
 
 export default router;

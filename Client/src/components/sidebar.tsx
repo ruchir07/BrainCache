@@ -1,11 +1,9 @@
-import {
-   VideoIcon,
-  FileTextIcon,
-  LinkIcon,
-  LogOut,
-} from "lucide-react";
+import { VideoIcon, FileTextIcon, LinkIcon, LogOut } from "lucide-react";
 import { useCategoryStore } from "@/store/categoryStore";
-import { useAuthStore } from "@/store/AuthStore";
+import { useAuthStore } from "@/store/AuthStore"; // assuming you store token/user
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 const navItems = [
   { label: "Notes", value: "note", icon: <FileTextIcon className="w-5 h-5" /> },
@@ -14,20 +12,38 @@ const navItems = [
     value: "file",
     icon: <VideoIcon className="w-5 h-5" />,
   },
-  { label: "Links", value: "link", icon: <LinkIcon className="w-5 h " /> },
+  { label: "Links", value: "link", icon: <LinkIcon className="w-5 h-5" /> },
 ];
 
 const Sidebar = () => {
   const { activeCategory, setCategory } = useCategoryStore();
-  const { logout } = useAuthStore();
+  const { logout, token } = useAuthStore();
+  const navigate = useNavigate();
 
-  const handleLogout = () =>{
-    logout();
-    window.location.href = "/";
-  }
+
+  const handleLogout = async () => {
+    try {
+      await fetch("http://localhost:3000/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      logout(); 
+      window.location.replace("/login");
+    } catch (error) {
+      console.error("Logout failed", error);
+      alert("Logout error");
+    }
+  };
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/", {replace:true});
+    }
+  }, [token]);
 
   return (
-    <aside className="w-64 h-lvh bg-gray-800 text-white p-4 space-y-3">
+    <aside className="w-64 h-screen bg-gray-800 text-white flex flex-col justify-between p-4">
       <div>
         <h1 className="text-xl font-bold mb-6">BrainCache</h1>
         <ul className="space-y-6">
@@ -50,6 +66,7 @@ const Sidebar = () => {
         </ul>
       </div>
 
+      {/* Logout Button */}
       <button
         onClick={handleLogout}
         className="flex items-center gap-2 text-sm text-gray-300 hover:text-red-400 mt-6 px-2 py-2 rounded-md transition"
@@ -57,7 +74,6 @@ const Sidebar = () => {
         <LogOut className="w-5 h-5" />
         <span>Logout</span>
       </button>
-
     </aside>
   );
 };

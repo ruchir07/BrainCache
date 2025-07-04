@@ -4,6 +4,7 @@ import NoteCard from "../components/notecard";
 import Sidebar from "../components/sidebar";
 import { useAuthStore } from "../store/AuthStore";
 import { useCategoryStore } from "@/store/categoryStore";
+import { useNavigate } from "react-router-dom";
 
 
 export type NoteType = "all" | "note" | "link" | "file" ;
@@ -25,6 +26,14 @@ const Home = () => {
     const { token } = useAuthStore();
     const [notes, setNotes] = useState<Note[]>([]);
     const { activeCategory } = useCategoryStore();
+    const { user } = useAuthStore();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!user) {
+        navigate("/login", { replace: true });
+        }
+    }, [user]);
 
     useEffect(() => {
         const fetchNotes = async () => {

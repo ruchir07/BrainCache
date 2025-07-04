@@ -14,5 +14,10 @@ export const useAuthStore = create<AuthState>((set) => ({
     token: null,
     setUser: (user) => set({ user }),
     setToken: (token) => set({ token }),
-    logout: () => set({user: null,token:null})
+    logout: () => {
+        set({token:null , user:null});
+        fetch('http://localhost:3000/api/auth/logout', {
+            credentials: 'include',
+        }).catch(() => {});
+    }
 }));
