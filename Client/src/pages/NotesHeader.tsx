@@ -8,7 +8,6 @@ import { useState } from 'react';
 const NotesHeader = () => {
   const [showModel, setShowModel] = useState(false);
 
-  // ✅ Zustand store usage should be here
   const { showPopup, link, setShowPopup, setLink } = usePopupStore();
 
   const handleShareBrain = async () => {
