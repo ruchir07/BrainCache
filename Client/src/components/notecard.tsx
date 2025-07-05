@@ -43,7 +43,7 @@ const NoteCard = (props: INote) => {
         const confirm = window.confirm("Are you sure you want to delete this note?");
         if(!confirm) return;
 
-        const res = await fetch(`http://localhost:3000/api/notes/${props._id}`,{
+        const res = await fetch(`https://braincache-backend.onrender.com/api/notes/${props._id}`,{
             method: "DELETE",
             credentials: "include"
         });
