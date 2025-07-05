@@ -1,10 +1,8 @@
-import { useState } from 'react';
 import { BrowserRouter as Router,Route,Routes } from 'react-router-dom';
 import Login from './pages/Login';
 import Home from './pages/Home';
 import { Navigate } from 'react-router-dom';
 import SharedNotes from './pages/SharedNotes';
-import ProtectedRoute from './components/protectedRoute';
 import { Toaster } from "sonner";
 import './App.css'
 import { useAuthStore } from './store/AuthStore';

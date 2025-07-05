@@ -1,4 +1,3 @@
-import type { ReactElement } from "react";
 
 export interface ButtonProps {
   variant: "primary" | "secondary";
@@ -9,9 +8,7 @@ export interface ButtonProps {
   onClick: () => void;
 }
 
-const variantStyles = {
-  "default": "bg-black-500 hover:bg-black-600 text-white",
-}
+
 
 export const Button = (props: ButtonProps) => {
 

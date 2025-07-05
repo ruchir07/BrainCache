@@ -22,9 +22,9 @@ interface INote {
 const SharedNotes = () => {
     const { hash } = useParams();
     const [notes,setNotes] = useState<INote[]>([]);
-    const [owner, setOwner] = useState<string>("");
+    const [owner ] = useState<string>("");
     const [sortBy,setSortBy] = useState<'date' | 'type'>("date");
-    const [loading,setLoading] = useState<boolean>(false);
+    const [loading ] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchSharedNotes = async() => {
