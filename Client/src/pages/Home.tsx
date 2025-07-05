@@ -31,7 +31,7 @@ const Home = () => {
 
     useEffect(() => {
         const fetchNotes = async () => {
-        const res = await fetch("http://localhost:3000/api/notes", {
+        const res = await fetch("https://braincache-backend.onrender.com/api/notes", {
             headers: {
                 'Authorization': `${token}`
             },
