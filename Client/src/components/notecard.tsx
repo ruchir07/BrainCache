@@ -1,4 +1,3 @@
-import React from "react";
 export type NoteType = "all" | "note" | "file" | "link";
 import { useEffect, useState } from "react";
 import {

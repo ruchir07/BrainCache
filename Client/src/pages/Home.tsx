@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import NotesHeader from "./NotesHeader"
 import NoteCard from "../components/notecard";
 import Sidebar from "../components/sidebar";
@@ -10,17 +10,7 @@ import { useNoteStore } from "@/store/noteStore";
 
 export type NoteType = "all" | "note" | "link" | "file" ;
 
-interface Note {
-    _id: string;
-    userId: string;
-    type: NoteType;
-    title: string;
-    content: string;
-    tags: string[];
-    fileUrl?: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
+
 
 const Home = () => {
 

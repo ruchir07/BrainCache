@@ -9,7 +9,7 @@ import { toast } from "sonner";
 const NotesHeader = () => {
   const [showModel, setShowModel] = useState(false);
 
-  const { showPopup, link, setShowPopup, setLink } = usePopupStore();
+  const { showPopup, setShowPopup, setLink } = usePopupStore();
 
   const handleShareBrain = async () => {
     try {
