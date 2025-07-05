@@ -9,7 +9,7 @@ import {
   ExternalLink,
   Globe,
 } from "lucide-react";
-import { TwitterTweetEmbed } from "react-twitter-embed";
+import { Tweet } from "react-tweet";
 import { useNoteStore } from "@/store/noteStore";
 import { toast } from "sonner"
 
@@ -126,9 +126,8 @@ const NoteCard = (props: INote) => {
 
             <div className="px-4 py-3">
               {tweetId ? (
-                <TwitterTweetEmbed
-                  tweetId={tweetId}
-                  options={{ width: "100%" }}
+                <Tweet
+                  id={tweetId}
                 />
               ) : (
                 <div className="text-sm italic text-gray-500">
