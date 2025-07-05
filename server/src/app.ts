@@ -27,7 +27,7 @@ const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes 
 });
 
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors({ origin: 'https://braincache-frontend.onrender.com', credentials: true }));
 app.use(express.json());
 
 app.use(cookieParser());

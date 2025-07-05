@@ -24,7 +24,7 @@ router.get('/google/callback',
             sameSite: 'lax',
         });
 
-        res.redirect('http://localhost:5173/home');  //This has to be changed to the frontend URL
+        res.redirect('https://braincache-frontend.onrender.com/home');  //This has to be changed to the frontend URL
     }
 );
 

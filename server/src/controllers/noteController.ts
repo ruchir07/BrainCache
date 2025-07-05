@@ -102,7 +102,7 @@ export const shareBrain = async(req:Request,res:Response):Promise<void> => {
 
             res.json({
                 message:"Link create",
-                shareUrl:`http://localhost:5173/shared/${existing.hash}`
+                shareUrl:`https://braincache-frontend.onrender.com/shared/${existing.hash}`
             })
         }else{
             const deleting = await link.deleteOne({
