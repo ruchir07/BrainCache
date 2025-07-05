@@ -5,7 +5,7 @@ import Home from './pages/Home';
 import { Navigate } from 'react-router-dom';
 import SharedNotes from './pages/SharedNotes';
 import ProtectedRoute from './components/protectedRoute';
-
+import { Toaster } from "sonner";
 import './App.css'
 import { useAuthStore } from './store/AuthStore';
 
@@ -14,14 +14,17 @@ function App() {
   const user = useAuthStore((state) => state.user);
 
   return(
-      <Router>
-        <Routes>
-          <Route path="/" element = {user ? <Home /> : <Navigate to="/login" />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/home" element={user ? <Home /> : <Login />} />
-          <Route path="/shared/:hash" element={<SharedNotes />} />
-        </Routes>
-      </Router>  
+      <>
+        <Toaster position='bottom-right' richColors closeButton />
+        <Router>
+          <Routes>
+            <Route path="/" element = {user ? <Home /> : <Navigate to="/login" />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/home" element={user ? <Home /> : <Login />} />
+            <Route path="/shared/:hash" element={<SharedNotes />} />
+          </Routes>
+        </Router>
+      </>  
     )
 }
 

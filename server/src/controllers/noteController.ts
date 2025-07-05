@@ -9,14 +9,12 @@ import {random} from "../utils/generateLink";
 export const getAllNotes = async(req: Request, res: Response) => {
     try{
         const userId = (req as any).user?._id; 
-        console.log(userId);
 
         const notes = await knowledgeItem.find({
             userId: new mongoose.Types.ObjectId(userId)
         });
 
         // const notes = await knowledgeItem.find({ user:userId });
-        console.log("Found notes",notes);
 
         res.status(200).json(notes);
     }
@@ -29,17 +27,7 @@ export const createNote = async(req: Request, res: Response) => {
     try{
         const userId = (req as any).user?._id; // Assuming user ID is stored in req.user 
 
-        console.log(userId);
-        console.log("req.body:", req.body);
         const {type, title, content, tags,fileUrl} = req.body;
-
-        // if (!type || !title) {
-        //     res.status(400).json({ message: "Missing required fields: type or title" });
-        //     return;
-        // }
-
-        console.log("Embedding content:", content);
-        // const vector = await generateEmbeddingText(content || '');
 
         const newNote = new knowledgeItem({
             userId,
@@ -88,6 +76,7 @@ export const deleteNote = async(req: Request, res: Response):Promise<void> => {
         const deleted = await knowledgeItem.findByIdAndDelete(req.params.id);
         if(!deleted){
             res.status(404).json({ message: "Note not found" });
+            return;
         }
         res.status(200).json({ message: "Note deleted successfully" });
         

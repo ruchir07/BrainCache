@@ -5,18 +5,19 @@ import Sidebar from "../components/sidebar";
 import { useAuthStore } from "../store/AuthStore";
 import { useCategoryStore } from "@/store/categoryStore";
 import { useNavigate } from "react-router-dom";
+import { useNoteStore } from "@/store/noteStore";
 
 
 export type NoteType = "all" | "note" | "link" | "file" ;
 
 interface Note {
+    _id: string;
     userId: string;
     type: NoteType;
     title: string;
     content: string;
     tags: string[];
     fileUrl?: string;
-    vector?: number[];
     createdAt: Date;
     updatedAt: Date;
 }
@@ -24,16 +25,19 @@ interface Note {
 const Home = () => {
 
     const { token } = useAuthStore();
-    const [notes, setNotes] = useState<Note[]>([]);
+    const notes = useNoteStore((state) => state.notes);
+    const setNotes = useNoteStore((state) => state.setNotes);
     const { activeCategory } = useCategoryStore();
     const { user } = useAuthStore();
     const navigate = useNavigate();
+
 
     useEffect(() => {
         if (!user) {
         navigate("/login", { replace: true });
         }
     }, [user]);
+
 
     useEffect(() => {
         const fetchNotes = async () => {
@@ -66,17 +70,8 @@ const Home = () => {
         <NotesHeader />
         <h1>
             {filteredNotes.length === 0 ? (<p>No notes found.</p>) : 
-            (filteredNotes.map(( note,idx ) => (
-                <NoteCard
-                    key={idx}
-                    userId={note.userId}
-                    type={note.type}
-                    title={note.title}
-                    content={note.content}
-                    tags={note.tags}
-                    fileUrl={note.fileUrl}
-                    createdAt={note.createdAt}
-                />
+            (filteredNotes.map(( note ) => (
+                <NoteCard key={note._id} {...note} />
             )))}
         </h1>
       </div>

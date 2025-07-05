@@ -1,6 +1,10 @@
 import express from 'express';
-import { upload } from '../middleware/upload';
 import { protect } from '../middleware/authMiddleware';
+import multer from 'multer';
+import { cloudinary } from '../utils/cloudinary';
+import { Request,Response } from 'express';
+import fs from "fs";
+
 import {
     getAllNotes,
     createNote,
@@ -12,16 +16,39 @@ import {
 } from '../controllers/noteController';
 import { link } from 'fs';
 
+const upload = multer({dest: "temp/"});
+
 const router = express.Router();
 
-router.post('/upload',protect,upload.single('file'),async(req, res):Promise<void> => {
+router.post("/upload", upload.single("file"), async (req, res):Promise<void> => {
+  try {
     if (!req.file) {
-        res.status(400).json({ message: 'No file uploaded' });
-        return;
+      res.status(400).json({ message: "No file uploaded" });
+      return;
     }
 
-    const fileUrl = `/uploads/${req.file.filename}`;
-    res.status(201).json({ fileUrl });
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      resource_type: "auto", 
+      folder: "braincache_uploads",
+      use_filename: true,
+      unique_filename: false
+    });
+
+    fs.unlinkSync(req.file.path); 
+
+    const originalName = req.file.originalname;
+    const fileType = req.file.mimetype.split('/').pop();
+
+    res.status(201).json({
+      fileUrl: result.secure_url,
+      fileType,
+      originalName
+    });
+  } catch (error) {
+    console.error("Upload failed:", error);
+    res.status(500).json({ message: "Upload failed", error });
+    return;
+  }
 });
 
 router.get('/',protect, getAllNotes);

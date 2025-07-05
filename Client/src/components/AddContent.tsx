@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {useNoteStore} from "../store/noteStore"
+import { toast } from "sonner"
 
 interface AddContentModelProps {
     show: boolean;
@@ -34,11 +35,12 @@ const AddContentModel = ({ show, onClose }: AddContentModelProps) => {
       if (res.ok) {
         setUploadedFileUrl(data.fileUrl);
       } else {
-        alert("File upload failed");
+        toast.error("File upload failed");
       }
-    } catch (err) {
+    } 
+    catch (err) {
       console.error("Upload error:", err);
-      alert("Upload failed");
+      toast.error("Error uploading file");
     } finally {
       setUploading(false);
     }
@@ -70,9 +72,10 @@ const AddContentModel = ({ show, onClose }: AddContentModelProps) => {
     if (res.ok) {
       const newNote = await res.json();
       addNote(newNote);
+      toast.success("Note Added");
       onClose();
     } else {
-      alert("Failed to add note");
+       toast.error("Failed to add note");
     }
   };
 
@@ -108,18 +111,52 @@ const AddContentModel = ({ show, onClose }: AddContentModelProps) => {
           />
 
           {type === "file" && (
-            <>
+            <div className="mb-4">
+              <label
+                htmlFor="file-upload"
+                className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-4 cursor-pointer hover:border-blue-500 transition"
+              >
+                <svg
+                  className="w-8 h-8 text-gray-400 mb-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M7 16V4m0 0l-4 4m4-4l4 4M17 8v12m0 0l-4-4m4 4l4-4"
+                  />
+                </svg>
+                <span className="text-sm text-gray-600">
+                  Click to choose a file (PDF, DOCX, PNG, JPG)
+                </span>
+                {uploadedFileUrl && (
+                  <span className="mt-2 text-xs text-green-600">✅ File uploaded</span>
+                )}
+                {uploading && (
+                  <span className="mt-2 text-xs text-gray-500">Uploading...</span>
+                )}
+              </label>
+
               <input
+                id="file-upload"
                 type="file"
                 accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
                 onChange={handleFileChange}
-                className="mb-2"
+                className="hidden"
               />
-              {uploading && <p className="text-sm text-gray-500">Uploading...</p>}
-              {uploadedFileUrl && (
-                <p className="text-sm text-green-600">✅ File uploaded</p>
-              )}
-            </>
+            </div>
+          )}
+
+          {type === "link" && (
+            <input
+              name="fileUrl"
+              placeholder="Paste URL (YouTube, Twitter, etc)"
+              className="w-full mb-2 p-2 border rounded"
+              onChange={(e) => setUploadedFileUrl(e.target.value)}
+            />
           )}
 
           <input

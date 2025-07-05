@@ -3,6 +3,7 @@ export type NoteType = "all" | "note" | "file" | "link";
 import { useEffect, useState } from "react";
 import {
   Calendar,
+  Trash2,
   Tag,
   Play,
   Twitter,
@@ -10,26 +11,64 @@ import {
   Globe,
 } from "lucide-react";
 import { TwitterTweetEmbed } from "react-twitter-embed";
+import { useNoteStore } from "@/store/noteStore";
+import { toast } from "sonner"
 
 interface INote {
+  _id: string;
   userId: string;
   type: NoteType;
   title: string;
   content: string;
   tags: string[];
   fileUrl?: string;
-  vector?: number[];
+  fileType?: string;
+  originalName?: string;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 const NoteCard = (props: INote) => {
   const [contentType, setContentType] = useState<
-    "youtube" | "twitter" | "default"
+    "youtube" | "twitter" | "file" | "default"
   >("default");
   const [youtubeId, setYoutubeId] = useState<string>("");
   const [tweetId, setTweetId] = useState<string | null>(null);
 
+  const { deleteNote } = useNoteStore.getState();
+
+
+  const handleDelete = async(_id: string) => {
+    
+    try{
+        const confirm = window.confirm("Are you sure you want to delete this note?");
+        if(!confirm) return;
+
+        const res = await fetch(`http://localhost:3000/api/notes/${props._id}`,{
+            method: "DELETE",
+            credentials: "include"
+        });
+        if(res.ok){
+            deleteNote(_id);
+            toast.success("Note deleted");
+            // setNotes(notes.filter((note) => note._id === props._id))
+        }
+        else{
+            toast.error("Failed to delete note");
+        }
+    }
+    catch(error){
+        toast.error("Error deleting note");
+    }
+    
+  };
+
   useEffect(() => {
+    if (props.type === "file") {
+      setContentType("file");
+      return;
+    }
+
     if (props.fileUrl) {
       const youtubeRegex =
         /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
@@ -53,13 +92,16 @@ const NoteCard = (props: INote) => {
   }, [props.fileUrl, props.content, props.title]);
 
   const renderPreview = () => {
+    const ext = props.fileUrl?.split(".").pop()?.toUpperCase();
+
     switch (contentType) {
       case "youtube":
         return (
           <div className="relative mb-4 rounded-xl overflow-hidden group cursor-pointer">
             <img
-              src={`https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`}
+              src={`https://img.youtube.com/vi/${youtubeId}/default.jpg`}
               alt="YouTube thumbnail"
+              loading="lazy"
               className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
             />
             <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center group-hover:bg-opacity-20 transition-all">
@@ -94,6 +136,21 @@ const NoteCard = (props: INote) => {
                   Unable to load tweet
                 </div>
               )}
+            </div>
+          </div>
+        );
+
+      case "file":
+        return (
+          <div className="flex items-center gap-4 mb-4 p-4 bg-gray-100 rounded-xl">
+            <div className="w-16 h-16 bg-gray-300 flex items-center justify-center rounded-lg text-xl font-semibold text-white bg-gradient-to-br from-purple-500 to-indigo-500">
+              {ext?.slice(0, 4) || "FILE"}
+            </div>
+            <div>
+              <p className="text-sm text-gray-700">Uploaded File</p>
+              <p className="text-xs text-gray-500">
+                {props.originalName || "Unknown File"}
+              </p>
             </div>
           </div>
         );
@@ -147,41 +204,49 @@ const NoteCard = (props: INote) => {
         </p>
 
         {/* fileUrl Link (if not YouTube or Twitter) */}
-        {props.fileUrl && contentType === "default" && props.type !== 'file' && (
-          <div className="mb-4">
-            <a
-              href={props.fileUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
-            >
-              <ExternalLink className="w-4 h-4" />
-              Visit Link
-            </a>
-          </div>
-        )}
+        {props.fileUrl &&
+          contentType === "default" &&
+          props.type !== "file" && (
+            <div className="mb-4">
+              <a
+                href={props.fileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Visit Link
+              </a>
+            </div>
+          )}
 
         {props.fileUrl && props.type === "file" && (
-          <div className="flex gap-4 mt-4">
-            {/* View File */}
+        <div className="flex gap-4 mt-4 items-center">
             <a
-              href={`http://localhost:3000${props.fileUrl}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2 bg-green-600 text-white rounded-3xl hover:bg-green-700 transition"
+            href={`${props.fileUrl}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2 bg-green-600 text-white rounded-3xl hover:bg-green-700 transition"
             >
-              👁️ View
+            👁️ View
             </a>
 
-            {/* Download File */}
+
             <a
-              href={`http://localhost:3000${props.fileUrl}`}
-              download
-              className="px-4 py-2 bg-blue-600 text-white rounded-3xl hover:bg-blue-700 transition"
+            href={`${props.fileUrl}`}
+            download={props.originalName}
+            className="px-4 py-2 bg-blue-600 text-white rounded-3xl hover:bg-blue-700 transition"
             >
-              ⬇️ Download
+            ⬇️ Download
             </a>
-          </div>
+
+
+            {props.fileType && (
+            <span className="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded">
+                {props.fileType.toUpperCase()}
+            </span>
+            )}
+        </div>
         )}
 
         {/* YouTube/Twitter Links */}
@@ -236,6 +301,16 @@ const NoteCard = (props: INote) => {
             </div>
           </div>
         )}
+
+        <div className="flex justify-end mb-3">
+          <button
+            onClick={() => handleDelete(props._id)}
+            className="text-red-500 hover:text-red-700 transition flex items-center gap-1 text-sm"
+          >
+            <Trash2 className="w-4 h-4" />
+            Delete
+          </button>
+        </div>
 
         {/* Created Date */}
         <div className="flex items-center gap-2 text-sm text-gray-500 pt-3 border-t border-gray-100">

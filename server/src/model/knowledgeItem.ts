@@ -11,6 +11,8 @@ export interface IKnowledgeItem extends Document {
     content: string;
     tags: string[];
     fileUrl?: string;
+    fileType?: string;
+    originalName?: string;
     vector?: number[];
     createdAt: Date;
     updatedAt: Date;

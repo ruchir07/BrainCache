@@ -13,8 +13,10 @@ interface INote {
     content: string;
     tags: string[];
     fileUrl?: string;
-    vector?: number[];
+    fileType?: string;
     createdAt: Date;
+    updatedAt: Date;
+
 }
 
 const SharedNotes = () => {

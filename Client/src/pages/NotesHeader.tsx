@@ -3,6 +3,7 @@ import AddContentModel from "../components/AddContent"
 import ShareLinkPopup from '../components/ShareLinkPopUp'
 import { usePopupStore } from "../store/popupStore"
 import { useState } from 'react';
+import { toast } from "sonner";
 
 
 const NotesHeader = () => {
@@ -25,11 +26,11 @@ const NotesHeader = () => {
         setLink(data.shareUrl);
         setShowPopup(true);
       } else {
-        alert("Failed to create share link");
+        toast.error("Failed to create share link");
       }
     } catch (err) {
       console.error("Error sharing brain:", err);
-      alert("Something went wrong");
+      toast.error("Something went wrong");
     }
   };
 

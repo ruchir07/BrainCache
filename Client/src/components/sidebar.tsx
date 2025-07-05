@@ -3,6 +3,7 @@ import { useCategoryStore } from "@/store/categoryStore";
 import { useAuthStore } from "@/store/AuthStore"; // assuming you store token/user
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner"
 
 
 const navItems = [
@@ -32,7 +33,7 @@ const Sidebar = () => {
       window.location.replace("/login");
     } catch (error) {
       console.error("Logout failed", error);
-      alert("Logout error");
+      toast.error("Logout error");
     }
   };
 
