@@ -8,7 +8,7 @@ const Login = () => {
   useEffect(() => {
     
     const fetchUser = async() => {
-      const res = await fetch("http://localhost:3000/api/auth/profile", {
+      const res = await fetch("https://braincache-backend.onrender.com/api/auth/profile", {
         credentials: "include",
       });
       if(res.ok) {
