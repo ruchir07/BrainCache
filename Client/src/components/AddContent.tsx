@@ -25,7 +25,7 @@ const AddContentModel = ({ show, onClose }: AddContentModelProps) => {
 
     try {
       setUploading(true);
-      const res = await fetch("http://localhost:3000/api/notes/upload", {
+      const res = await fetch("https://braincache-backend.onrender.com/api/notes/upload", {
         method: "POST",
         body: formData,
         credentials: "include",
@@ -62,7 +62,7 @@ const AddContentModel = ({ show, onClose }: AddContentModelProps) => {
       payload.fileUrl = uploadedFileUrl;
     }
 
-    const res = await fetch("http://localhost:3000/api/notes", {
+    const res = await fetch("https://braincache-backend.onrender.com/api/notes", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
