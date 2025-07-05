@@ -13,7 +13,7 @@ const NotesHeader = () => {
 
   const handleShareBrain = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/notes/brain/share", {
+      const res = await fetch("https://braincache-backend.onrender.com/api/notes/brain/share", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
