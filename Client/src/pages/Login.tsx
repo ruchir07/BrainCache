@@ -22,7 +22,7 @@ const Login = () => {
   },[]);
 
   const handleLogin = () => {
-    window.location.href = "http://localhost:3000/api/auth/google";
+    window.location.href = "https://braincache-backend.onrender.com/api/auth/google";
   };
 
   return (
