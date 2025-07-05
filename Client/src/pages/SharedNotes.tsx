@@ -28,7 +28,7 @@ const SharedNotes = () => {
 
     useEffect(() => {
         const fetchSharedNotes = async() => {
-            const res = await fetch(`http://localhost:3000/api/notes/brain/${hash}`);
+            const res = await fetch(`https://braincache-backend.onrender.com/api/notes/brain/${hash}`);
             const data = await res.json();
             console.log("🔗 Shared notes response:", data);
             if(res.ok){
