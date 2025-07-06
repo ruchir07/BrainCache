@@ -17,6 +17,8 @@ dotenv.config();
 connectDB();
 const app = express();
 
+app.set('trust proxy', 1); // ADD THIS!
+
 app.use(session({
     secret: process.env.SESSION_SECRET!,
     resave: false,
@@ -32,7 +34,21 @@ const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes 
 });
 
-app.use(cors({ origin: 'https://brain-cache-alpha.vercel.app', credentials: true }));
+const allowedOrigins = [
+  'https://braincache-frontend.onrender.com', 
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
 app.use(express.json());
 
 app.use(cookieParser());

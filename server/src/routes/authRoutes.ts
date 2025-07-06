@@ -23,7 +23,7 @@ router.get('/google/callback',
             sameSite: 'none',
         });
 
-        res.redirect('https://brain-cache-alpha.vercel.app/home');  //This has to be changed to the frontend URL
+        res.redirect('https://braincache-frontend.onrender.com/home');  //This has to be changed to the frontend URL
     }
 );
 
