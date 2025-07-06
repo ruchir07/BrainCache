@@ -17,6 +17,14 @@ dotenv.config();
 connectDB();
 const app = express();
 
+app.use(cors(
+  {
+    origin: ["https://brain-cache-alpha.vercel.app"],
+    methods: ["POST","GET","DELETE"],
+    credentials: true
+  }
+));
+
 app.set('trust proxy', 1); // ADD THIS!
 
 app.use(session({
@@ -31,17 +39,6 @@ app.use(session({
     }
 }));
 
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes 
-});
-
-app.use(cors(
-  {
-    origin: ["https://brain-cache-alpha.vercel.app"],
-    methods: ["POST","GET","DELETE"],
-    credentials: true
-  }
-));
 
 app.use(express.json());
 
