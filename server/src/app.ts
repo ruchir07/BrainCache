@@ -36,7 +36,7 @@ const limiter = rateLimit({
 });
 
 const allowedOrigins = [
-  'https://brain-cache-bay.vercel.app', 
+  'https://brain-cache-alpha.vercel.app', 
 ];
 
 app.use(cors({
