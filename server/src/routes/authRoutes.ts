@@ -22,7 +22,7 @@ router.get('/google/callback',
             sameSite: 'none',
         });
         console.log("✅ Login successful — redirecting to /home");
-        res.redirect('https://brain-cache-bay.vercel.app/home');  //This has to be changed to the frontend URL
+        res.redirect('https://brain-cache-alpha.vercel.app/home');  //This has to be changed to the frontend URL
     }
 );
 
