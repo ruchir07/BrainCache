@@ -21,7 +21,7 @@ router.get('/google/callback',
             secure: true,
             sameSite: 'none',
         });
-
+        console.log("✅ Login successful — redirecting to /home");
         res.redirect('https://braincache-frontend.onrender.com/home');  //This has to be changed to the frontend URL
     }
 );
