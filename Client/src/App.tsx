@@ -9,16 +9,16 @@ import { useAuthStore } from './store/AuthStore';
 
 function App() {
   
-  const user = useAuthStore((state) => state.user);
+  const token = useAuthStore((state) => state.token);
 
   return(
       <>
         <Toaster position='bottom-right' richColors closeButton />
         <Router>
           <Routes>
-            <Route path="/" element = {user ? <Home /> : <Navigate to="/login" />} />
+            <Route path="/" element = {token ? <Home /> : <Navigate to="/login" />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/home" element={user ? <Home /> : <Login />} />
+            <Route path="/home" element={token ? <Home /> : <Login />} />
             <Route path="/shared/:hash" element={<SharedNotes />} />
           </Routes>
         </Router>

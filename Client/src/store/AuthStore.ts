@@ -16,7 +16,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     setToken: (token) => set({ token }),
     logout: () => {
         set({token:null , user:null});
-        fetch('http://localhost:3000/api/auth/logout', {
+        fetch('https://braincache-backend.onrender.com/api/auth/logout', {
             credentials: 'include',
         }).catch(() => {});
     }
