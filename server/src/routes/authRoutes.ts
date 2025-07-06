@@ -5,8 +5,7 @@ import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
-router.get('/google',(req,res,next) => {
-    next();  
+router.get('/google',(req,res) => {
 },passport.authenticate('google',{
     scope: ['profile', 'email'],
 }));
@@ -20,8 +19,8 @@ router.get('/google/callback',
 
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
+            secure: true,
+            sameSite: 'none',
         });
 
         res.redirect('https://brain-cache-alpha.vercel.app/home');  //This has to be changed to the frontend URL
@@ -52,8 +51,8 @@ router.get('/logout',(req,res) =>{
 
     res.clearCookie('token', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: true,
+      sameSite: 'none',
     });
 
     res.status(200).json({ message: 'Logged out successfully' });
