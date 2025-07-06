@@ -102,7 +102,7 @@ export const shareBrain = async(req:Request,res:Response):Promise<void> => {
 
             res.json({
                 message:"Link create",
-                shareUrl:`https://braincache-frontend.onrender.com/shared/${existing.hash}`
+                shareUrl:`https://brain-cache-bay.vercel.app/shared/${existing.hash}`
             })
         }else{
             const deleting = await link.deleteOne({

@@ -36,7 +36,7 @@ const limiter = rateLimit({
 });
 
 const allowedOrigins = [
-  'https://braincache-frontend.onrender.com', 
+  'https://brain-cache-bay.vercel.app', 
 ];
 
 app.use(cors({
