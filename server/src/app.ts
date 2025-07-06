@@ -18,9 +18,13 @@ connectDB();
 const app = express();
 
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'secret',
+    secret: process.env.SESSION_SECRET || "defaultsecret",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    cookie: {
+        secure: true,       
+        sameSite: "none"    
+    }
 }));
 
 const limiter = rateLimit({
