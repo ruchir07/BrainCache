@@ -26,19 +26,19 @@ const Login = () => {
   };
 
   return (
-    <div className="h-screen w-full flex flex-col justify-center items-center bg-black text-white">
-      <h1 className="text-4xl font-bold mb-6">Welcome to BrainCache</h1>
-      <p className="text-gray-400 mb-8 text-center max-w-md">
-        Your personal second brain for organizing notes, files, and links using AI.
-      </p>
-      <button
-        onClick={handleLogin}
-        className="px-6 py-3 rounded-xl bg-white text-black hover:bg-gray-200 transition font-medium"
-      >
-        Sign in with Google
-      </button>
-    </div>
-  );
+  <div className="h-screen w-full flex flex-col justify-center items-center bg-black text-white">
+    <h1 className="text-4xl font-bold mb-6">Welcome to BrainCache</h1>
+    <p className="text-gray-400 mb-8 text-center max-w-md">
+      Your digital memory for saving and organizing everything that matters.
+    </p>
+    <button
+      onClick={handleLogin}
+      className="px-6 py-3 rounded-xl bg-white text-black hover:bg-gray-200 transition font-medium"
+    >
+      Sign in with Google
+    </button>
+  </div>
+);
 };
 
 export default Login;
